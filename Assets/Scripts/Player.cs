@@ -21,6 +21,21 @@ public class Player : MonoBehaviour
     public Transform spawnPosition;
 
     public float groundDistanceCheck = 0.2f;
+
+
+    // Condiciones de transicion de animaciones
+    public bool isRunning;
+    public bool isJumping;
+    public bool isFalling;
+    public bool isGrounded;
+    
+    private static readonly int IsRunning = Animator.StringToHash("isRunning");
+    private static readonly int IsJumping = Animator.StringToHash("isJumping");
+    private static readonly int IsFalling = Animator.StringToHash("isFalling");
+    private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
+    private static readonly int Attack1 = Animator.StringToHash("Attack1");
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,8 +58,9 @@ public class Player : MonoBehaviour
         Vector2 playerDirection = new Vector2(x, y); // Vector de direcciones pasado por input
         // playerDirection.y -= gravity * Time.deltaTime; // Gravedad
         
-        move(playerDirection);
-        jump();
+        Move(playerDirection);
+        Jump();
+        Attack();
 
         if (transform.position.y < groundLimit)
         {
@@ -56,11 +72,19 @@ public class Player : MonoBehaviour
     private void LateUpdate()
     {
         // Comprueba condicion para la transicion de animaciones entre idle y running 
-        bool isRunning = rb.velocity.x != 0;
-        animator.SetBool("isRunning", isRunning);
+        isRunning = rb.velocity.x != 0;
+        animator.SetBool(IsRunning, isRunning);
+
+        isJumping = rb.velocity.y > 0;
+        animator.SetBool(IsJumping, isJumping);
+
+        isFalling = rb.velocity.y < 0;
+        animator.SetBool(IsFalling, isFalling);
+
+        animator.SetBool(IsGrounded, isGrounded);
     }
 
-    void move(Vector2 pd)
+    void Move(Vector2 pd)
     {
         rb.velocity = new Vector2(pd.x * moveSpeed, rb.velocity.y); // 
 
@@ -79,19 +103,29 @@ public class Player : MonoBehaviour
         }
     }
 
-    void jump()
+    void Jump()
     {
         Ray ray = new Ray(transform.position, Vector2.down);
         
-        bool onGround = Physics2D.Raycast(ray.origin, ray.direction, boxSizeY, groundMask);
+        isGrounded = Physics2D.Raycast(ray.origin, ray.direction, boxSizeY, groundMask);
         
         //Debug.DrawLine(transform.position, Vector2.down * boxSizeY, Color.magenta);
         Debug.DrawRay(ray.origin, ray.direction * boxSizeY);
-        Debug.Log(onGround);
-        if (Input.GetKeyDown(KeyCode.Space) && onGround)
+        //Debug.Log(isGrounded);
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
             rb.velocity += Vector2.up * jumpForce;
+        }
+    }
+
+    void Attack()
+    {
+        bool triggerAttack = Input.GetMouseButtonDown(0);
+
+        if (triggerAttack)
+        {
+            animator.SetTrigger(Attack1);
         }
     }
 }
