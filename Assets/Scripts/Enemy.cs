@@ -1,18 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Animator anim;
+    
+    private static readonly int TakeHit = Animator.StringToHash("Take_hit");
+
+    private void Start()
     {
-        
+        anim = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        Debug.Log(other);
+        if (other.CompareTag("SwordDamage"))
+        {
+            anim.SetTrigger(TakeHit);
+        }
     }
+
+    /*
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log(other);
+        if (other.gameObject.CompareTag("SwordDamage"))
+        {
+            anim.SetTrigger(TakeHit);
+        }
+    }*/
 }
