@@ -6,30 +6,61 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private Animator anim;
+    private float boxSizeY;
+    private Rigidbody2D rb;
+    private BoxCollider2D collider;
+
+    private EnemyHealthController healthController;
+    /*
+    public LayerMask groundMask;
+    public bool isGrounded;
+    public float groundDistanceCheck = 0.2f;
+    public float jumpForce = 3;
+    public float thrust = 1.0f;
+    */
+    public float impulseX = 50;
+    public float impulseY = 50;
+    
+    public float damage = 20;
+
+    public int facing;
     
     private static readonly int TakeHit = Animator.StringToHash("Take_hit");
 
     private void Start()
     {
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        healthController = GetComponent<EnemyHealthController>();
+        collider = GetComponent<BoxCollider2D>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other);
+        //Debug.Log(other);
         if (other.CompareTag("SwordDamage"))
         {
             anim.SetTrigger(TakeHit);
+            healthController.TakeDamage(other.GetComponentInParent<Player>().damage);
+            TakeImpulseAfterDamage();
         }
     }
-
-    /*
-    private void OnCollisionEnter2D(Collision2D other)
+    
+    // Quiero que el enemigo se translade ligeramente hacia atras con un saltito cuando sea atacado
+    void TakeImpulseAfterDamage()
     {
-        Debug.Log(other);
-        if (other.gameObject.CompareTag("SwordDamage"))
-        {
-            anim.SetTrigger(TakeHit);
-        }
-    }*/
+        //rb.velocity += new Vector2(10, 10);
+        Vector2 impulse = new Vector2(impulseX * (-facing), impulseY);
+        rb.AddForce(impulse, ForceMode2D.Impulse);
+    }
+
+    public Collider2D getCollider()
+    {
+        return collider;
+    }
+
+    public Rigidbody2D GetRigidbody2D()
+    {
+        return rb;
+    }
 }

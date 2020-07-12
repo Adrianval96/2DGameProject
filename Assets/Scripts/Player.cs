@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
@@ -11,14 +12,17 @@ public class Player : MonoBehaviour
     private float boxSizeY;
     private Animator animator;
     private SpriteRenderer sprite;
+    private PlayerHealthController healthController;
+    
     
     public LayerMask groundMask;
-
     public float moveSpeed = 10;
     public float jumpForce = 10;
     public float gravity = 50;
-    public float groundLimit = -200;
+    public float groundLimit = -50;
     public Transform spawnPosition;
+
+    public float damage = 25;
 
     public float groundDistanceCheck = 0.2f;
 
@@ -43,9 +47,8 @@ public class Player : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        healthController = GetComponent<PlayerHealthController>();
 
-        
-        
         boxSizeY = collider.size.y / 2 + groundDistanceCheck;
     }
 
@@ -64,8 +67,7 @@ public class Player : MonoBehaviour
 
         if (transform.position.y < groundLimit)
         {
-            rb.velocity = Vector2.zero;
-            transform.position = spawnPosition.position;
+            Respawn();
         }
     }
 
@@ -127,5 +129,15 @@ public class Player : MonoBehaviour
         {
             animator.SetTrigger(Attack1);
         }
+    }
+
+    public void Respawn()
+    {    
+        /*
+        rb.velocity = Vector2.zero;
+        transform.position = spawnPosition.position;
+        */
+
+        SceneManager.LoadScene("SampleScene");
     }
 }
