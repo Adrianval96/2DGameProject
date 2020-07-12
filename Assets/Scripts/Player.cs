@@ -130,7 +130,6 @@ public class Player : MonoBehaviour
             animator.SetTrigger(Attack1);
         }
     }
-
     public void Respawn()
     {    
         /*

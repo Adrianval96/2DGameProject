@@ -6,6 +6,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private Animator anim;
+
     private float boxSizeY;
     private Rigidbody2D rb;
     private BoxCollider2D collider;
@@ -24,10 +25,12 @@ public class Enemy : MonoBehaviour
     public float damage = 20;
 
     public int facing;
-    
+
+
     private static readonly int TakeHit = Animator.StringToHash("Take_hit");
 
     private void Start()
+
     {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
@@ -63,4 +66,14 @@ public class Enemy : MonoBehaviour
     {
         return rb;
     }
+
+    /*
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Debug.Log(other);
+        if (other.gameObject.CompareTag("SwordDamage"))
+        {
+            anim.SetTrigger(TakeHit);
+        }
+    }*/
 }
