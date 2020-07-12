@@ -33,16 +33,9 @@ public class EnemyHealthController : MonoBehaviour
         if (CurrentHealth <= 0)
         {
             CurrentHealth = 0;
-            Die();
+            enemy.Die();
         }
     }
 
-    public void Die()
-    {
-        enemy.getCollider().enabled = false;
-        //enemy.GetRigidbody2D().velocity = Vector2.zero;
-        //enemy.GetRigidbody2D().gravityScale = 0;
-        animator.SetTrigger("IsDead");
-        Destroy(gameObject, 0.767f);
-    }
+
 }

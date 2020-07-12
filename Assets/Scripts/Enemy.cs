@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     private float boxSizeY;
     private Rigidbody2D rb;
     private BoxCollider2D collider;
+    private Player player;
 
     private EnemyHealthController healthController;
     /*
@@ -23,7 +24,8 @@ public class Enemy : MonoBehaviour
     public float impulseY = 50;
     
     public float damage = 20;
-
+    public int killReward = 20;
+    
     public int facing;
 
 
@@ -43,6 +45,7 @@ public class Enemy : MonoBehaviour
         //Debug.Log(other);
         if (other.CompareTag("SwordDamage"))
         {
+            player = other.GetComponentInParent<Player>();
             anim.SetTrigger(TakeHit);
             healthController.TakeDamage(other.GetComponentInParent<Player>().damage);
             TakeImpulseAfterDamage();
@@ -67,13 +70,13 @@ public class Enemy : MonoBehaviour
         return rb;
     }
 
-    /*
-    private void OnCollisionEnter2D(Collision2D other)
+    public void Die()
     {
-        Debug.Log(other);
-        if (other.gameObject.CompareTag("SwordDamage"))
-        {
-            anim.SetTrigger(TakeHit);
-        }
-    }*/
+        player.AddToScore(killReward);
+        getCollider().enabled = false;
+        //enemy.GetRigidbody2D().velocity = Vector2.zero;
+        //enemy.GetRigidbody2D().gravityScale = 0;
+        anim.SetTrigger("IsDead");
+        Destroy(gameObject, 0.767f);
+    }
 }

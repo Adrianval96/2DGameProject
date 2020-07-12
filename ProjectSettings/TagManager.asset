@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - SwordDamage
+  - Enemy
+  - DamageSource
   layers:
   - Default
   - TransparentFX
@@ -48,4 +50,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2987922973
+    locked: 0
+  - name: UI
+    uniqueID: 1956893741
     locked: 0

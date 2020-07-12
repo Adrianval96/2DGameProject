@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
 
     public float groundDistanceCheck = 0.2f;
 
+    public int score;
+
 
     // Condiciones de transicion de animaciones
     public bool isRunning;
@@ -38,11 +40,15 @@ public class Player : MonoBehaviour
     private static readonly int IsFalling = Animator.StringToHash("isFalling");
     private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
     private static readonly int Attack1 = Animator.StringToHash("Attack1");
+    
+    public static event Action<int> onScoreChange; 
 
 
     // Start is called before the first frame update
     void Start()
     {
+        score = 0;
+        
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
@@ -138,5 +144,11 @@ public class Player : MonoBehaviour
         */
 
         SceneManager.LoadScene("SampleScene");
+    }
+
+    public void AddToScore(int reward)
+    {
+        score += reward;
+        onScoreChange?.Invoke(score);
     }
 }
